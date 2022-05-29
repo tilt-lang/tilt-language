@@ -1,0 +1,32 @@
+log.info "START"
+
+scope "procedures, infix notation and pipes" {
+    proc sum (a b) {
+        return $(a + b)
+    }
+    sum 1 2 | log.info
+}
+
+scope "lists and alternative ways to attribute" {
+    set lista1 (a b c)
+    list a b c | as lista2
+    length $lista2 | log.info "The length of $lista2 is: "
+}
+
+scope "dicts" {
+    dict a=1 b=2 | as d
+    # We're going to consider a '=' like a space when parsing,
+    # since it's VERY common in Tcl to have "key value"
+    # as arguments and "switches" like `-server command`, that
+    # would end up as `-server=command` in Tilt.
+
+    set x <$d a>
+    # -> set x [dict get {a}]
+}
+
+scope "assert" {
+    # Variables set in scopes are visible outside them:
+    assert (<$d b> == 2) "Ops! Something changed unexpectedly."
+}
+
+log.info "END"
